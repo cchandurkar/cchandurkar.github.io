@@ -534,6 +534,8 @@
 			  ]
 			};
 
+			var nyTimesSquare = [40.757046, -73.9859724];
+
 	    $(document).ready(function(){
 
 	    	// Utilities
@@ -542,7 +544,7 @@
 	      	$(".button-collapse").sideNav();
 
 	      	// Create Map
-	      	var map = L.map('map').setView([40, 40], 2);
+	      	var map = L.map('map').setView([40, 40], 2, true);
 
 	      	// Attribution
 	      	L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
@@ -568,29 +570,110 @@
 				    fillOpacity: 0.5
 				}).addTo(map);
 
+	      		// Open Model
+				circle.on("click", function(){
+					$('#facility-modal').openModal();
+				});
+
 	      	});
 
 	      	// Add Search Boxes
 	      	var searchInput = L.control({position: "topright"});
 
+	      	
+
 	      	// on Add
 	      	searchInput.onAdd = function (map) {
 
 	      		// Create Div
-				var div = L.DomUtil.create('div', 'search-box');
+				var containerDiv = L.DomUtil.create('div', 'search-box');
+					containerDiv.innerHTML = "<br /><br /><br />";
+					var cardDiv = L.DomUtil.create('div', 'card');
+						var cardContentDiv = L.DomUtil.create('div', 'card-content');
+							
+							// Card Title
+							var cardTitleDiv = L.DomUtil.create('div', 'card-title grey-text text-darken-3');
+							cardTitleDiv.innerHTML = "Search Facilities";
 
-			   	// Content
-			    div.innerHTML = "<br /><br /><br /><div class='card'><div class='card-content'><div class='card-title grey-text text-darken-3'>Search Facilities</div><div class='input-field'><input id='facility-name' type='text' class='validate'><label for='facility-name'>search by name</label></div><div class='input-field'><input id='species' type='text' class='validate'><label for='species'>search by species {&nbsp; ,&nbsp; , &nbsp;}</label></div><div class='input-field'><input id='country' type='text' class='validate'><label for='country'>search by country</label></div><a style='margin-top:5px;' class='waves-effect waves-light btn teal white-text'>Search</a></div></div>";
+							// Input - Facility Name
+							var inputFacilityNameDiv = L.DomUtil.create('div', 'input-field');
+								var inputFacilityName = L.DomUtil.create('input', 'validate');
+									inputFacilityName.setAttribute("id", "facility-name");
+									inputFacilityName.setAttribute("type", "text");
+								var labelFacilityName = L.DomUtil.create('label');
+									labelFacilityName.setAttribute("for", "facility-name");
+									labelFacilityName.innerHTML = "search by facility";
 
-			    return div;
+									// Append
+									inputFacilityNameDiv.appendChild(inputFacilityName);
+									inputFacilityNameDiv.appendChild(labelFacilityName);
+
+							// Input - Species
+							var inputSpeciesDiv = L.DomUtil.create('div', 'input-field');
+								var inputSpecies = L.DomUtil.create('input', 'validate');
+									inputSpecies.setAttribute("id", "species");
+									inputSpecies.setAttribute("type", "text");
+								var labelSpecies = L.DomUtil.create('label');
+									labelSpecies.setAttribute("for", "species");
+									labelSpecies.innerHTML = "search by species";
+
+									// Append
+									inputSpeciesDiv.appendChild(inputSpecies);
+									inputSpeciesDiv.appendChild(labelSpecies);
+
+							// Input - Country
+							var inputCountryDiv = L.DomUtil.create('div', 'input-field');
+								var inputCountry = L.DomUtil.create('input', 'validate');
+									inputCountry.setAttribute("id", "country");
+									inputCountry.setAttribute("type", "text");
+								var labelCountry = L.DomUtil.create('label');
+									labelCountry.setAttribute("for", "country");
+									labelCountry.innerHTML = "search by country";
+
+									// Append
+									inputCountryDiv.appendChild(inputCountry);
+									inputCountryDiv.appendChild(labelCountry);
+
+							// Search button
+							var searchBtn = L.DomUtil.create('a', 'search-btn waves-effect waves-light btn teal white-text');
+							searchBtn.setAttribute("style", "margin-top:5px");
+							searchBtn.innerHTML = "Search";
+							L.DomEvent.addListener(searchBtn, "click", function(){
+								map.setView(nyTimesSquare, 12, true);
+							});
+
+						// Append Remaining Divs	
+						cardContentDiv.appendChild(cardTitleDiv);
+						cardContentDiv.appendChild(inputFacilityNameDiv);
+						cardContentDiv.appendChild(inputSpeciesDiv);
+						cardContentDiv.appendChild(inputCountryDiv);
+						cardContentDiv.appendChild(searchBtn);
+					cardDiv.appendChild(cardContentDiv);
+				containerDiv.appendChild(cardDiv);
+			   	
+			   	// Disable drag on mouse over
+		      	L.DomEvent.addListener(cardDiv, "mouseover", function(){
+		      		map.dragging.disable();
+		      	});
+
+		      	// Enable drag on mouse out
+		      	L.DomEvent.addListener(cardDiv, "mouseout", function(){
+		      		map.dragging.enable();
+		      	});
+
+			    return containerDiv;
 		    };
 
 		    // Add it to map
 		    searchInput.addTo(map);
 
+		    L.DomEvent.addListener($(".search-btn"), "click", function(){
+		    	alert(3453);
+		    });
 			
 
 	      });
+
 	</script>
 
 
@@ -625,9 +708,45 @@
 	<!-- Map -->
 	<div id="map" class='full-height'></div>
 
-	
+	<!-- Modal Structure -->
+	<div id="facility-modal" class="modal">
+		<div class="modal-content">
+	    	<h4 style="padding-bottom:0;margin-bottom:0;">XYZ Facility Inc.</h4>
+	    	<p style="padding-top:0;margin-top:0;" class="grey-text text-darken-2">25B Bayberry Road, New Bedford, MA 02740</p>
+	    	<div class="divider"></div>
+	    	<p>Donec in scelerisque turpis, a tempus neque. Aenean ac ipsum ex. Cras et nunc non diam sodales maximus. Donec pharetra lacus ante, a convallis augue venenatis non</p>
+		      <table class="responsive-table hoverable">
+		        <thead>
+		          <tr>
+		              <th data-field="id">Name</th>
+		              <th data-field="name">Item Name</th>
+		              <th data-field="price">Item Price</th>
+		          </tr>
+		        </thead>
 
-	
+		        <tbody>
+		          <tr>
+		            <td>Alvin</td>
+		            <td>Eclair</td>
+		            <td>$0.87</td>
+		          </tr>
+		          <tr>
+		            <td>Alan</td>
+		            <td>Jellybean</td>
+		            <td>$3.76</td>
+		          </tr>
+		          <tr>
+		            <td>Jonathan</td>
+		            <td>Lollipop</td>
+		            <td>$7.00</td>
+		          </tr>
+		        </tbody>
+		      </table>
+	    </div>
+	    <div class="modal-footer">
+	    	<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Dismiss</a>
+	    </div>
+	</div>
             
         
 
