@@ -541,6 +541,8 @@
 	    	// Utilities
 	    	$(".full-height").height($(window).height())
 	      	$('.parallax').parallax();
+	      	$(".side-nav").css({"z-index":1000});
+	      	$(".search-box").css({"z-index":800});
 	      	$(".button-collapse").sideNav();
 
 	      	// Create Map
@@ -579,7 +581,7 @@
 
 	      	// Add Search Boxes
 	      	var searchInput = L.control({position: "topright"});
-
+	      	
 	      	
 
 	      	// on Add
@@ -587,6 +589,7 @@
 
 	      		// Create Div
 				var containerDiv = L.DomUtil.create('div', 'search-box');
+				containerDiv.setAttribute("style", "z-index:888");
 					containerDiv.innerHTML = "<br /><br /><br />";
 					var cardDiv = L.DomUtil.create('div', 'card');
 						var cardContentDiv = L.DomUtil.create('div', 'card-content');
@@ -694,7 +697,7 @@
 	          			<li><a href="about.html" class="teal-text text-darken-3">About</a></li>
 	          			<li><a href="docs.html" class="teal-text text-darken-3">Docs</a></li>
 	        		</ul>
-	        		<ul class="side-nav" id="mobile-demo">
+	        		<ul class="side-nav" id="mobile-demo" style="z-index:999">
 	        			<li><a href="index.html" class="teal-text text-darken-3">Home</a></li>
 	        			<li><a href="search.html" class="teal-text text-darken-3">Search</a></li>
 			        	<li><a href="about.html" class="teal-text text-darken-3">About</a></li>
