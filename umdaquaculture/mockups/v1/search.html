@@ -3,7 +3,7 @@
 <head>
 
 	<!-- Titles -->
-	<title>UMD Aquaculture</title>
+	<title>Search Aquabase</title>
 
 	<!-- Metas -->
 	<meta charset="UTF-8">
@@ -21,8 +21,11 @@
   	<!-- Compiled and minified materialize JavaScript -->
   	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
 
-    <!-- GoogleMaps -->
-    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+
+     <!-- Leaflet JS -->
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
 
     <!-- Custom Style -->
     <style type="text/css">
@@ -48,8 +51,8 @@
 	    	
 	    }
 
-		#map-canvas {
-	       
+		#map{
+	       height: 500px;
       	}
 
       	.brand-logo{
@@ -92,48 +95,33 @@
 		 	padding: 10px
 		 }
 
+		 .search-box{
+		 	opacity: 0.9;
+		 }
+
+		 .search-box ::-webkit-input-placeholder {
+		   color: black;
+		}
+
+		.search-box :-moz-placeholder { /* Firefox 18- */
+		   color: black;  
+		}
+
+		.search-box ::-moz-placeholder {  /* Firefox 19+ */
+		   color: black;  
+		}
+
+		.search-box :-ms-input-placeholder {  
+		   color: black;  
+		}
+
     </style>
 
 
 	<!--  Custom JavaScript -->
     <script type="text/javascript">
 
-	    $(document).ready(function(){
-	      $('.parallax').parallax();
-	      $(".button-collapse").sideNav();
-	    });
-
-    	// Function that initializes map
-    	function initialize() {
-
-    		$(".full-height").height($(window).height() - 200)
-
-    		// Get Map Canvas
-		    var mapCanvas = document.getElementById('map-canvas');
-
-		    // Create Map Options
-		    var mapOptions = {
-		    	center: new google.maps.LatLng(30, 0),
-		    	zoom: 2,
-		    	minZoom: 1,
-		    	draggable: false,
-			    scrollwheel: false,
-			    panControl: false,
-			   disableDefaultUI: true,
-			   disableDoubleClickZoom: true
-
-		    }
-
-		    // Create Map Instance
-		    var map = new google.maps.Map(mapCanvas, mapOptions);
-
-		    // Declare Styling
-		    var greenstyle = [ { "elementType": "geometry.stroke", "stylers": [ { "visibility": "off" } ] },{ "elementType": "labels", "stylers": [ { "visibility": "off" } ] },{ "featureType": "road", "elementType": "geometry", "stylers": [ { "visibility": "off" } ] },{ "featureType": "landscape", "elementType": "geometry.fill", "stylers": [ { "hue": "#00ffdd" }, { "lightness": -74 }, { "saturation": 30 }, { "gamma": 0.94 } ] },{ "featureType": "water", "elementType": "labels.text", "stylers": [ { "visibility": "on" } ] },{ "featureType": "administrative", "elementType": "geometry", "stylers": [ { "visibility": "off" } ] },{ } ];
-
-		    // Set Style to Map
-		    map.set('styles', greenstyle);
-
-		    var geojsonData = {
+    var geojsonData = {
 			  "type": "FeatureCollection",
 			  "features": [
 			    {
@@ -546,52 +534,64 @@
 			  ]
 			};
 
-			// map.data.addGeoJson(geojsonData);
+	    $(document).ready(function(){
 
-			$(geojsonData.features).each(function(i, feature){
+	    	// Utilities
+	    	$(".full-height").height($(window).height())
+	      	$('.parallax').parallax();
+	      	$(".button-collapse").sideNav();
 
-				// Get City from GeoJSON
-				var city = new google.maps.LatLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+	      	// Create Map
+	      	var map = L.map('map').setView([40, 40], 2);
 
-				// Random
+	      	// Attribution
+	      	L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+				maxZoom: 18,
+				attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+					'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+					'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+				id: 'examples.map-i875mjb7'
+			}).addTo(map);
+
+	      	// GeoJSON
+	      	$(geojsonData.features).each(function(i, feature){
+				
+	      		// Random
 				var random = Math.floor(Math.random() * 6) + 1;
 
-				// Create Circle
-				var myCity = new google.maps.Circle({
-					center: city,
-					radius: (Math.floor(Math.random() * 4) + 1) * 150000,
-					strokeColor: random > 2 ? "#F44336" : "#FFC107",
-					strokeOpacity: 0.6,
-					strokeWeight: 1,
-					fillColor: random > 2 ? "#F44336" : "#FFC107",
-					fillOpacity: 0.6
-				});
+	      		// Create Marker
+	      		//var marker = L.marker([feature.geometry.coordinates[1], - feature.geometry.coordinates[0]]).addTo(map);
+	      		var circle = L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], 
+	      			(Math.floor(Math.random() * 4) + 1) * 150000, {
+				    color: random > 2 ? "#F44336" : "#FFC107",
+				    fillColor: random > 2 ? "#F44336" : "#FFC107",
+				    fillOpacity: 0.5
+				}).addTo(map);
 
-				myCity.setMap(map);
+	      	});
 
-			});
+	      	// Add Search Boxes
+	      	var searchInput = L.control({position: "topright"});
 
-			// Create Div
-			var centerControlDiv = document.createElement('div');
-			var controlUI = document.getElementById("go-down");
-			centerControlDiv.appendChild(controlUI);
-			google.maps.event.addDomListener(controlUI, 'click', function() {
-			    
-			});
-			centerControlDiv.index = 1;
-			map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(centerControlDiv);
+	      	// on Add
+	      	searchInput.onAdd = function (map) {
 
+	      		// Create Div
+				var div = L.DomUtil.create('div', 'search-box');
 
+			   	// Content
+			    div.innerHTML = "<br /><br /><br /><div class='card'><div class='card-content'><div class='card-title grey-text text-darken-3'>Search Facilities</div><div class='input-field'><input id='facility-name' type='text' class='validate'><label for='facility-name'>search by name</label></div><div class='input-field'><input id='species' type='text' class='validate'><label for='species'>search by species {&nbsp; ,&nbsp; , &nbsp;}</label></div><div class='input-field'><input id='country' type='text' class='validate'><label for='country'>search by country</label></div><a style='margin-top:5px;' class='waves-effect waves-light btn teal white-text'>Search</a></div></div>";
+
+			    return div;
+		    };
+
+		    // Add it to map
+		    searchInput.addTo(map);
 
 			
 
-
-		}
-
-		// onload
-		google.maps.event.addDomListener(window, 'load', initialize);
-
-    </script>
+	      });
+	</script>
 
 
 </head>
@@ -622,27 +622,24 @@
 		 </nav>
 	</div>
 
-	<!-- Map and Go Down Button-->
-	<div id="map-canvas" class="main-container full-height cover-page"></div>
-	
-	<!-- Map Overlay Go-Down Button -->
-	<!-- <a id="go-down" class="btn-floating btn-medium waves-effect waves-light teal darken-4">
-		<i class="mdi-navigation-expand-more white-text"></i>
-	</a> -->
+	<!-- Map -->
+	<div id="map" class='full-height'></div>
 
-	<!-- Go-Down Button Outside Map -->
+	
+
+	<!-- Go-Down Button Outside Map 
 	<div class="center-align down-holder">
 		<a id="go-down-down" class="btn-floating btn-medium waves-effect waves-light teal darken-4">
 			<i class="mdi-navigation-expand-more white-text"></i>
 		</a>
-	</div>
+	</div>-->
 
 	<!-- Main Content -->
 	<div class="container">
 		<div class="row">
 			<div class="col s12 m10 l10 offset-m1 offset-l1">
 				<div class="left-align">
-					<h4 class="section-title teal-text text-darken-4">Aquaculture</h4>
+					<h4 class="section-title teal-text text-darken-4">Search</h4>
 					<div class="content">
 						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare ex ac scelerisque euismod. Pellentesque vitae ultricies purus, at venenatis ligula. Nulla placerat leo ut odio rhoncus, in tempus enim egestas. Sed placerat urna nisl, dapibus vulputate tellus mollis sed. Pellentesque et ligula felis. Praesent sit amet feugiat magna. Donec sollicitudin ex at est commodo, aliquet blandit purus fringilla. Proin ac ullamcorper ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ut bibendum orci. Maecenas nulla nulla, vehicula eget dignissim id, viverra a tellus. In dictum interdum tempor. Mauris in lacinia arcu. Pellentesque sodales velit tellus, in tincidunt neque volutpat nec. Curabitur sodales tellus ut ultrices aliquam. Nulla sit amet nulla ac velit iaculis posuere.</p>
 
@@ -653,70 +650,7 @@
 		</div>
 	</div>
 
-	<!-- Parallax -->
-	<div class="wrap">
-	    <div class="parallax-container">
-	      <div class="parallax">
-	      	<img src="assets/images/background/Cages_with_people2.jpg">
-	      </div>
-	    </div>
-    </div>
-
-    <!-- UMassD -->
-    <div class="container">
-		<div class="row">
-			<div class="col s12 m10 l10 offset-m1 offset-l1">
-				<div class="left-align">
-					<h4 class="section-title teal-text text-darken-4">AquaBase</h4>
-					<div class="content">
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare ex ac scelerisque euismod. Pellentesque vitae ultricies purus, at venenatis ligula. Nulla placerat leo ut odio rhoncus, in tempus enim egestas. Sed placerat urna nisl, dapibus vulputate tellus mollis sed. Pellentesque et ligula felis. Praesent sit amet feugiat magna. Donec sollicitudin ex at est commodo, aliquet blandit purus fringilla. Proin ac ullamcorper ex. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ut bibendum orci. Maecenas nulla nulla, vehicula eget dignissim id, viverra a tellus. In dictum interdum tempor. Mauris in lacinia arcu. Pellentesque sodales velit tellus, in tincidunt neque volutpat nec. Curabitur sodales tellus ut ultrices aliquam. Nulla sit amet nulla ac velit iaculis posuere.</p>
-
-						<p>Etiam porttitor ornare enim euismod cursus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras ultricies ultricies metus et lobortis. Duis auctor dui at condimentum porttitor. Praesent eget interdum mi. Etiam efficitur suscipit consequat. Nam convallis sagittis luctus. Ut laoreet aliquet arcu ut fermentum. Mauris viverra congue viverra. Nulla malesuada metus vel condimentum fringilla. Nulla sollicitudin diam ac dui fringilla, a euismod tortor sollicitudin.</p>
-
-						<p>Donec in scelerisque turpis, a tempus neque. Aenean ac ipsum ex. Cras et nunc non diam sodales maximus. Donec pharetra lacus ante, a convallis augue venenatis non. Aenean aliquet elementum pharetra. Cras ac faucibus metus, vel pretium tellus. Nam semper sed nibh et commodo. </p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-    <!-- Partners -->
-	<div class="container">
-		<div class="row">
-			<div class="col s12 m10 l10 offset-m1 offset-l1">
-				<h4 class="section-title teal-text text-darken-4">Partners</h4>
-				<div class="content">
-				<p>Donec in scelerisque turpis, a tempus neque. Aenean ac ipsum ex. Cras et nunc non diam sodales maximus. Donec pharetra lacus ante, a convallis augue venenatis non. Aenean aliquet elementum pharetra. Cras ac faucibus metus, vel pretium tellus. Nam semper sed nibh et commodo.</p>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col s12 m10 l10 offset-m1 offset-l1">
-				<div class="row partners">
-					<div class="col s12 m4 l4">
-						 <img class="responsive-img" src="assets/images/logos/umassd.png">
-					</div>
-					<div class="col s12 m4 l4">
-						<br />
-						<br />
-						<br />
-						<img style="" class="responsive-img" src="assets/images/logos/gaa.png">
-					</div>
-					<div class="col s12 m4 l4">
-						<img class="responsive-img" src="assets/images/logos/pfs.jpg">
-					</div>
-				</div>
-			</div>	
-		</div>
-		<div class="row">
-			<div class="col s12 m10 l10 offset-m1 offset-l1">
-				<div class="content">
-					<p>Donec in scelerisque turpis, a tempus neque. Aenean ac ipsum ex. Cras et nunc non diam sodales maximus. Donec pharetra lacus ante, a convallis augue venenatis non. Aenean aliquet elementum pharetra. Cras ac faucibus metus, vel pretium tellus. Nam semper sed nibh et commodo.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	
 
 	<!-- Footer -->
     <footer class="page-footer teal darken-3">
