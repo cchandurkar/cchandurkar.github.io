@@ -27,6 +27,11 @@
      <!-- Leaflet JS -->
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
 
+	<!-- Marker Cluster -->
+	<link rel="stylesheet" href="Leaflet.markercluster/dist/MarkerCluster.css" />
+	<link rel="stylesheet" href="Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+	<script src="Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+
     <!-- Custom Style -->
     <style type="text/css">
 
@@ -557,31 +562,47 @@
 				id: 'examples.map-i875mjb7'
 			}).addTo(map);
 
+			// Create MarkerCluster Layer Group
+			var markers = L.markerClusterGroup({ chunkedLoading: true, chunkProgress: function(processed, total, elapsed, layersArray){
+
+			}});
+
+			var markerList = [];
+
 	      	// GeoJSON
 	      	$(geojsonData.features).each(function(i, feature){
 				
-	      		// Random
-				var random = Math.floor(Math.random() * 6) + 1;
+	   //    		// Random
+				// var random = Math.floor(Math.random() * 6) + 1;
 
-	      		// Create Marker
-	      		//var marker = L.marker([feature.geometry.coordinates[1], - feature.geometry.coordinates[0]]).addTo(map);
-	      		var circle = L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], 
-	      			(Math.floor(Math.random() * 4) + 1) * 150000, {
-				    color: random > 2 ? "#F44336" : "#FFC107",
-				    fillColor: random > 2 ? "#F44336" : "#FFC107",
-				    fillOpacity: 0.5
-				}).addTo(map);
+	   //    		// Create Marker
+	   //    		//var marker = L.marker([feature.geometry.coordinates[1], - feature.geometry.coordinates[0]]).addTo(map);
+	   //    		var circle = L.circle([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], 
+	   //    			(Math.floor(Math.random() * 4) + 1) * 150000, {
+				//     color: random > 2 ? "#F44336" : "#FFC107",
+				//     fillColor: random > 2 ? "#F44336" : "#FFC107",
+				//     fillOpacity: 0.5
+				// }).addTo(map);
 
-	      		// Open Model
-				circle.on("click", function(){
-					$('#facility-modal').openModal();
-				});
+	   //    		// Open Model
+				// circle.on("click", function(){
+				// 	$('#facility-modal').openModal();
+				// });
+
+		      	
+				var title = (i+"Facility "+i);
+				var marker = L.marker(L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]), { title: title });
+				marker.bindPopup(title);
+				markerList.push(marker);
 
 	      	});
 
+	      	markers.addLayers(markerList);
+			map.addLayer(markers);
+
 	      	// Add Search Boxes
 	      	var searchInput = L.control({position: "topright"});
-	      	
+
 	      	
 
 	      	// on Add
