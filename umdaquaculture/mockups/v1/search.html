@@ -592,7 +592,9 @@
 		      	
 				var title = (i+"Facility "+i);
 				var marker = L.marker(L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]), { title: title });
-				marker.bindPopup(title);
+				marker.on("click", function(){
+					$('#facility-modal').openModal();
+				});
 				markerList.push(marker);
 
 	      	});
