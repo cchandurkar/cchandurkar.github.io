@@ -1,6 +1,0 @@
-RewriteEngine on
-RewriteCond %{HTTP_HOST} ^cchandurkar.me$ [NC,OR]
-RewriteCond %{HTTP_HOST} ^www.cchandurkar.me$
-RewriteCond %{REQUEST_URI} !v3/
-RewriteRule ^(.*)$ http://cchandurkar.github.io/$1 [L,R=301]
-
