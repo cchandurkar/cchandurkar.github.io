@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteBase /
+RewriteCond %{REQUEST_URI} !v2/
+RewriteRule (.*) /v2/$1 [L]

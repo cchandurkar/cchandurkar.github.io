@@ -1,0 +1,328 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700);
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans:400,700);
+@import url(http://fonts.googleapis.com/css?family=Noto+Serif:400,700);
+@import url(http://fonts.googleapis.com/css?family=Mr+Bedfort:400,700);
+@import url(http://fonts.googleapis.com/css?family=Oleo+Script+Swash+Caps:400,700);
+@import url(http://fonts.googleapis.com/css?family=Satisfy:400,700);
+@import url(http://fonts.googleapis.com/css?family=Pacifico:400,700);
+
+
+
+html, body{
+	padding: 0;
+	margin: 0;
+	background: #FCFCFC;
+	color: #000;
+}
+
+h1,h2,h3,h4,h5,h6{
+	font-weight: 300 !important;
+}
+
+.no-padding{
+	padding: 0 !important;
+	margin:0 !important;
+}
+
+.sidebar{
+	width: 350px;
+	position: fixed;
+	height: 100%;
+	z-index: 999;
+	background: #fff;
+}
+
+.side-nav{
+	height: 100%;
+}
+
+.nav-wrapper{
+
+}
+
+.side-nav li:hover{
+	background: inherit !important;
+}
+
+.website-title{
+	font-family: "Noto Sans";
+	font-weight: bold !important;
+	text-transform: uppercase;
+}
+
+.website-subtitle{
+	font-family: "Noto Serif";
+	font-weight: bold !important;
+	margin-top: 5px !important;
+}
+
+.header-text{
+	font-weight: 300;
+}
+
+.caption{
+	font-size: 1.1em;
+}
+
+.section p{
+
+}
+
+.padding-10{
+	padding: 10px !important; 
+}
+
+.padding-20{
+	padding: 20px !important; 
+}
+
+.full-screen-wrapper{
+	color: white;
+	min-height: 100%;
+}
+
+.section .title{
+	font-family: "Roboto", "Noto Sans", "Mr Bedfort";
+}
+
+.section .subtitle{
+	font-family: "Noto Serif","Oleo Script Swash Caps";
+	font-weight: bold;
+}
+
+blockquote{
+	font-family: Satisfy, "Noto Serif";
+	font-size: 1.7em;
+}
+
+blockquote span{
+	font-size: 0.7em;
+}
+
+.section p{
+	
+}
+
+.card-title-small{
+	font-size: 1.1em !important;
+	margin-top: 5px !important;
+}
+
+.parallax-container {
+     height: 500px;
+}
+
+.no-line-height{
+	line-height: 0px !important;
+}
+
+ul.table-of-contents{
+	z-index: 999;
+}
+
+ul.table-of-contents li{
+	font-family: "Noto Sans", "Noto Serif";
+	line-height: 3em !important; 
+	float: none;
+	clear: both;
+}
+
+ul.table-of-contents li:hover{
+	background: transparent !important;
+}
+
+ul.table-of-contents li a{
+	
+}
+
+.satisfy{
+	font-family: "Satisfy";
+}
+
+a.logo{
+	font-family: "Noto Sans";
+	font-weight: bold;
+	font-size: 3em !important;
+	line-height: 1.5em !important
+}
+
+
+
+/*==================================================
+=            Bootstrap 3 Media Queries             =
+==================================================*/
+
+/*==========  Mobile First Method  ==========*/
+
+/* FallBack  */ 
+@media only screen and (max-width : 319px) {
+
+	header, main{
+		padding-left: 0px;
+	}
+
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (min-width : 320px) {
+
+	header, main{
+		margin-left: 0px;
+		margin: 0;
+	}
+
+	.sidebar{
+		width: 100%;
+		height: auto;
+		position: fixed;
+		padding: 5px 10px !important;
+		background: #fff !important;
+	}
+
+	.website-title{
+		font-size: 2.4em;
+	}
+
+	.website-subtitle{
+		font-size: 1.3em;
+	}
+
+	a.logo{
+		font-size: 2em !important;
+		line-height: 2em !important
+	}
+
+	blockquote{
+		font-family: Satisfy, "Noto Serif";
+		font-size: 1.7em;
+	}
+
+	blockquote span{
+		font-size: 0.7em;
+	}
+
+	.section{
+		padding:20px !important;
+	}
+
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (min-width : 480px) {
+
+	header, main{
+		margin-left: 0px;
+	}
+
+	.sidebar{
+		width: 100%;
+		height: auto;
+		padding: 10px !important;
+		position: fixed;
+	}
+
+	a.logo{
+		font-size: 2.2em !important;
+	}
+
+}
+
+/* Small Devices, Tablets - Portrait*/
+@media only screen and (min-width : 768px) {
+
+	header, main{
+		margin-left: 0px;
+	}
+
+	.sidebar{
+		padding: 10px !important;
+	}
+
+	a.logo{
+		font-size: 2.5em !important;
+	}
+
+}
+
+/* Medium Devices, Desktops */
+/* 2  Pane */
+@media only screen and (min-width : 992px) {
+
+	header, main{
+		margin-left: 350px;
+	}
+
+	.sidebar{
+		width: 350px;
+		position: fixed;
+		height: 100%;
+		padding: 50px !important
+	}
+
+	.section{
+		padding:0px !important;
+	}
+
+	.website-title{
+		font-size: 3em;
+	}
+
+	.website-subtitle{
+		font-size: 1.6em;
+	}
+
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+
+
+}
+
+
+
+/*==========  Non-Mobile First Method  ==========*/
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (max-width : 320px) {
+    
+}
+
+/* Small */
+/* 2 Pane */
+@media(min-width:768px) and (max-width:991px){
+
+
+}
+
+/* Medium */
+/* 2 Pane */
+@media(min-width:992px) and (max-width:1199px){
+
+}
+
+/* Large */
+/* 2 Pane */
+@media(min-width:1200px){
+
+}
