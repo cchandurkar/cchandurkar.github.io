@@ -1,0 +1,483 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700);
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans:400,700);
+@import url(http://fonts.googleapis.com/css?family=Noto+Serif:400,700);
+
+html, body{
+	height:100% !important;
+	background: #F1F1F1 !important; 
+	color: #333 !important;
+}
+
+nav{
+	background: transparent !important;
+	box-shadow: none !important; 
+}
+
+.no-padding{
+	padding: 0 !important;
+	margin:0 !important;
+}
+
+.container-fluid{
+	background: #F1F1F1; 
+	font-family: "Noto Sans", sans-serif;
+	color: #333;
+}
+
+.full-height-wrapper{
+	height: auto;
+}
+
+.sidebar {
+	background: #FFFFFF !important;
+	border-right: 1px solid #E5E5E5 !important;
+	padding: 50px !important;
+	position: fixed !important;
+	color: #333 !important;
+}
+
+.sidebar-container{
+	padding: 0 !important;
+	margin: 0 !important;
+	clear: both;
+}
+
+.website-title{
+	letter-spacing: 0px !important ;
+	font-weight: 700 !important;
+	font-family: "Noto Sans" !important;
+	line-height: 1.2em !important;
+}
+
+.website-subtitle{
+	opacity: 0.7 !important ;
+}
+
+.main{
+	margin: 0 !important;
+	padding: 0px !important;
+}
+  
+.card{
+	background: #FFF !important;
+	border: 1px solid #E5E5E5 !important;
+	box-shadow: none !important; 
+	border-radius: 0 !important;
+	padding: 0 !important;
+	margin: 1px 0px !important;
+}
+
+.card .title{
+	font-family: "Noto Serif";
+	font-weight: 700;
+	padding: 0;
+	margin: 0;
+}
+
+.card .subtitle{
+	opacity: 0.7;
+}
+
+.card .content{
+	margin-top: 20px;
+	font-family: "Noto Serif";
+	line-height: 1.7em;
+	font-size: 1.2em;
+}
+
+.card .anchor2{
+	text-transform: none;
+	color: #fff;
+	text-decoration: none;
+	background: #333;
+	padding: 10px 20px;
+	font-size: 1em;
+	font-family: "Noto Serif";
+	font-weight:normal;
+}
+
+.card .anchor2:hover{
+	color: white;
+}
+
+.button-collapse{
+	cursor: pointer;
+}
+
+.side-nav{
+
+}
+
+.side-nav li{
+	padding: 0  !important;
+	border-bottom: 1px solid #E5e5e5;
+	width: 90%;
+	margin: auto;
+}
+
+.side-nav li:last-child{
+	border:none;
+}
+
+.side-nav li a{
+	font-family: "Noto Serif";
+	font-size: 1.2em;
+}
+
+
+.page-content{
+	list-style-type: none !important;
+	margin: 0 !important;
+	margin-top:50px  !important;
+	padding:0  !important;
+}
+
+.page-content p{
+	margin: 20px 0px  !important;
+	font-family: "Noto Sans";
+	font-weight: bold;
+	letter-spacing: 1px  !important;
+	font-size: 15px  !important;
+	color: #333 ;
+}
+
+.page-content li{
+	padding: 10px 0px  !important;
+	border-bottom: 1px solid #E5e5e5;
+}
+
+.page-content li:last-child{
+	border:none;
+}
+
+.page-content li a{
+	font-family: "Noto Serif";
+	color: #333;
+	font-size: 1.2em;
+	text-decoration: none;
+}
+
+
+/*==================================================
+=            Bootstrap 3 Media Queries             =
+==================================================*/
+
+/*==========  Mobile First Method  ==========*/
+
+/* FallBack  */ 
+@media only screen and (max-width : 319px) {
+
+	.sidebar{
+		padding: 20px !important;
+		border: none;
+		border-bottom: 1px solid #E5E5E5;
+	}
+
+	.website-title{
+		font-size: 1.3em;
+		letter-spacing: 2px;
+	}
+
+	.website-subtitle{
+		display: none;
+	}
+
+	.card {
+		border: none;
+		border-bottom: 1px solid #E5E5E5;
+	}
+
+	.card .title{
+		font-size: 1.4em;
+		line-height: 1.4em;
+	}
+
+	.card .subtitle{
+		font-size: 1em;
+	}
+
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (min-width : 320px) {
+
+	.sidebar{
+		padding: 20px !important;
+		border: none  !important;
+		border-bottom: 1px solid #E5E5E5  !important;
+		width: 100% !important;
+		z-index: 999  !important;
+	}
+
+	.website-title{
+		font-size: 1.5em !important;
+		letter-spacing: 1px !important;
+	}
+
+	.website-subtitle{
+		display: none  !important;
+	}
+
+	.card {
+		border: none !important;
+		border-bottom: 1px solid #E5E5E5 !important;
+		padding: 40px 20px !important;
+		margin: 0 !important;
+	}
+
+	.card .title{
+		font-size: 1.5em !important;
+		line-height: 1.4em !important;
+	}
+
+	.card .subtitle{
+		font-size: 1em !important;
+	}
+
+	.main{
+		margin-top: 0em !important;
+		z-index: 888 !important;
+	}
+
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (min-width : 480px) {
+
+	.sidebar{
+		padding: 20px !important;
+		border: none !important;
+		border-bottom: 1px solid #E5E5E5 !important;
+		width: 100% !important;
+		z-index: 999 !important;
+	}
+
+	.website-title{
+		font-size: 1.5em !important;
+		letter-spacing: 1px !important;
+	}
+
+	.website-subtitle{
+		display: none !important;
+	}
+
+	.card {
+		padding: 30px !important;
+		border: none !important;
+		margin: 30px !important;
+		border: 1px solid #E5E5E5 !important;
+	}
+
+	.card .title{
+		font-size: 1.6em !important;
+		line-height: 1.4em !important;
+	}
+
+	.card .subtitle{
+		font-size: 1.1em !important;
+	}
+
+	.main{
+		margin-top: 0em !important;
+		z-index: 888 !important;
+	}
+
+}
+
+
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+
+	.full-height-wrapper{
+		height: auto !important;
+	}
+
+	.website-subtitle{
+		display: inline !important;
+	}
+
+	.sidebar{
+		padding: 40px !important;
+		border: none !important;
+		border-bottom: 1px solid #E5E5E5 !important;
+	}
+
+	.website-title{
+		font-size: 1.8em !important;
+		line-height: 1.4em !important;
+	}
+
+	.website-subtitle{
+		font-size: 1.2em !important;
+		line-height: 1.5em !important;
+	}
+
+	.card {
+		padding: 40px !important !important;
+		border: none !important;
+		margin: 30px !important;
+		border: 1px solid #E5E5E5 !important;
+	}
+
+	.card .title{
+		font-size: 1.5em !important;
+		line-height: 1.4em !important;
+	}
+
+	.card .subtitle{
+		font-size: 1.1em !important;
+	}
+
+	.main{
+		margin-top: 10em !important;
+		z-index: 888 !important;
+	}
+
+
+}
+
+/* Medium Devices, Desktops */
+/* 2  Pane */
+@media only screen and (min-width : 992px) {
+
+	.full-height-wrapper{
+		min-height: 100% !important;
+	}
+
+	.col-md-4{
+		width: 32% !important;
+	}
+
+	.sidebar{
+		padding: 50px !important;
+		border: none !important;
+		border-right: 1px solid #E5E5E5 !important;
+		height: 100% !important;
+		width: 30% !important;
+	}
+
+	.website-title{
+		font-size: 1.6em !important;
+		line-height: 1.4em !important;
+		letter-spacing: 0 !important;
+	}
+
+	.website-subtitle{
+		font-size: 1em !important;
+		line-height: 1.8em !important;
+	}
+
+	.main{
+		margin-top: 0 !important;
+	}
+
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+
+	.full-height-wrapper{
+		height: 100% !important;
+	}
+
+	.col-md-4{
+		width: 30% !important;
+	}
+
+	.sidebar{
+		padding: 50px !important;
+		border: none !important;
+		border-right: 1px solid #E5E5E5 !important;
+		width: 30% !important;
+		height: 100% !important;
+	}
+
+	.website-title{
+		font-size: 2.1em !important;
+		line-height: 1.4em !important;
+		letter-spacing: 0 !important;
+	}
+
+	.website-subtitle{
+		font-size: 1.2em !important;
+	}
+
+	.card {
+		padding: 50px !important;
+		border: none !important;
+		margin: 70px !important;
+		border: 1px solid #E5E5E5 !important;
+	}
+
+	.card .title{
+		font-size: 1.8em !important;
+		line-height: 1.5em !important;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	.card .subtitle{
+		font-size: 1.1em !important;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+
+	.card .content{
+		margin-top: 20px !important;
+		font-family: "Noto Serif" !important;
+		line-height: 1.7em !important;
+		font-size: 1.2em !important;
+	}
+
+
+}
+
+
+
+/*==========  Non-Mobile First Method  ==========*/
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (max-width : 320px) {
+    
+}
+
+/* Small */
+/* 2 Pane */
+@media(min-width:768px) and (max-width:991px){
+
+
+}
+
+/* Medium */
+/* 2 Pane */
+@media(min-width:992px) and (max-width:1199px){
+
+}
+
+/* Large */
+/* 2 Pane */
+@media(min-width:1200px){
+
+}

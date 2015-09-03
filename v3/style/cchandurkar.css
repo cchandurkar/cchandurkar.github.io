@@ -1,0 +1,54 @@
+@import 'materialize';
+@import 'ember-cli-materialize';
+
+/* Import materialize variables */
+@import 'components/color';
+@import 'components/variables';
+
+/* Import Icon Sets */
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
+
+/* Import Typefaces */
+@import url("http://fonts.googleapis.com/css?family=Open+Sans");
+@import url("http://fonts.googleapis.com/css?family=Oswald:400,700,300");
+@import url("http://fonts.googleapis.com/css?family=Raleway");
+@import url("http://fonts.googleapis.com/css?family=Raleway:400,300,500,600,700");
+@import url("http://fonts.googleapis.com/css?family=Lato:400,700");
+@import url("http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,700");
+
+
+.oswald{
+  font-family: "Oswald";
+}
+
+.website-nav a{
+  font-family: "Oswald";
+  font-size: 1.1em;
+  letter-spacing: 0.05em;
+}
+
+.website-nav a.website-title{
+  font-size: 1.5em;
+  letter-spacing: 0.09em;
+}
+
+.section-title{
+  font-family: "Oswald";
+  font-weight: 700;
+  line-height: 1.3em;
+}
+
+.section-desc{
+  font-family: "Roboto Condensed";
+  font-weight: 400;
+  line-height: 1.7em;
+}
+
+section.info a{
+  color: red;
+}
+
+.card .activator {
+  cursor: pointer;
+}
