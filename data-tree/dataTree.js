@@ -277,6 +277,31 @@ module.exports = (function(){
   }
 
   /**
+   * Checks whether tree is empty.
+   *
+   * @method isEmpty
+   * @memberof Tree
+   * @instance
+   * @return {boolean} whether tree is empty.
+   */
+  Tree.prototype.isEmpty = function(){
+    return this._rootNode === null && this._currentNode === null;
+  };
+
+  /**
+   * Empties the tree. Removes all nodes from tree.
+   *
+   * @method pruneAllNodes
+   * @memberof Tree
+   * @instance
+   * @return {@link Tree} empty tree.
+   */
+  Tree.prototype.pruneAllNodes = function(){
+    if(this._rootNode && this._currentNode) this.trimBranchFrom(this._rootNode);
+    return this;
+  };
+
+  /**
    * Creates a {@link TreeNode} that contains the data provided and insert it in a tree.
    * New node gets inserted to the `_currentNode` which updates itself upon every insertion and deletion.
    *
@@ -563,6 +588,91 @@ module.exports = (function(){
     return exportRecur(this._rootNode);
   };
 
+
+  /**
+   * Imports the JSON data into a tree using the criteria provided.
+   * A property indicating the nesting of object must be specified.
+   *
+   * @method import
+   * @memberof Tree
+   * @instance
+   * @param {object} data - JSON data that has be imported
+   * @param {string} childProperty - Name of the property that holds the nested data.
+   * @param {Tree~criteria} criteria - Callback function that receives data in parameter
+   * and MUST return a formatted data that has to be imported in a tree.
+   * @return {object} - {@link Tree}.
+   * @example
+   *
+   * var data = {
+   *   "trailId": "h2e67d4ea-f85f40e2ae4a06f4777864de",
+   *   "initiatedAt": 1448393492488,
+   *   "snapshots": {
+   *      "snapshotId": "b3d132131-213c20f156339ea7bdcb6273",
+   *      "capturedAt": 1448393495353,
+   *      "thumbnail": "data:img",
+   *      "children": [
+   *       {
+   *        "snapshotId": "yeb7ab27c-b36ff1b04aefafa9661243de",
+   *        "capturedAt": 1448393499685,
+   *        "thumbnail": "data:image/",
+   *        "children": [
+   *          {
+   *            "snapshotId": "a00c9828f-e2be0fc4732f56471e77947a",
+   *            "capturedAt": 1448393503061,
+   *            "thumbnail": "data:image/png;base64",
+   *            "children": []
+   *          }
+   *        ]
+   *      }
+   *     ]
+   *   }
+   * };
+   *
+   *  // Import
+   *  // This will result in a tree having nodes containing `id` and `thumbnail` as data
+   *  tree.import(data, 'children', function(nodeData){
+   *    return {
+   *      id: nodeData.snapshotId,
+   *      thumbnail: nodeData.thumbnail
+   *     }
+   *  });
+   *
+   */
+  Tree.prototype.import = function(data, childProperty, criteria){
+
+    // Empty all tree
+    if(this._rootNode) this.trimBranchFrom(this._rootNode);
+
+    // Hold `this`
+    var thiss = this;
+
+    // Import recursively
+    (function importRecur(node, recurData){
+
+      // Format data from given criteria
+      var _data = criteria(recurData);
+
+      // Create Root Node
+      if(!node){
+        node = thiss.insert(_data);
+      } else {
+        node = thiss.insertToNode(node, _data);
+      }
+
+      // For Every Child
+      recurData[childProperty].forEach(function(_child){
+        importRecur(node, _child);
+      });
+
+    }(this._rootNode, data));
+
+    // Set Current Node to root node
+    this._currentNode = this._rootNode;
+
+    return this;
+
+  };
+
   /**
    * Callback that receives a node data in parameter and expects user to return one of following:
    * 1. {@link Traverser#searchBFS} - {boolean} in return indicating whether given node satisfies criteria.
@@ -571,8 +681,6 @@ module.exports = (function(){
    * @callback criteria
    * @param data {object} - data of particular {@link TreeNode}
    */
-
-
 
   return Tree;
 
