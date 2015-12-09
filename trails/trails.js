@@ -33,7 +33,7 @@
 
 module.exports = require('./src/js/');
 
-},{"./src/js/":58}],2:[function(require,module,exports){
+},{"./src/js/":59}],2:[function(require,module,exports){
 // UMD header
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
@@ -4866,6 +4866,7 @@ module.exports = (function(){
    * @method matchCriteria
    * @memberof TreeNode
    * @instance
+   * @memberof TreeNode
    * @param {function} callback - Callback function that specifies some criteria. It receives {@link TreeNode#_data} in parameter and expects different values in different scenarios.
    * `matchCriteria` is used by following functions and expects:
    * 1. {@link Tree#searchBFS} - {boolean} in return indicating whether given node satisfies criteria.
@@ -4874,21 +4875,6 @@ module.exports = (function(){
    */
   TreeNode.prototype.matchCriteria = function(criteria){
     return criteria(this._data);
-  };
-
-  /**
-   * get sibling nodes.
-   *
-   * @method siblings
-   * @memberof TreeNode
-   * @instance
-   * @return {array} - array of instances of {@link TreeNode}
-   */
-  TreeNode.prototype.siblings = function(){
-    var thiss = this;
-    return !this._parentNode ? [] : this._parentNode._childNodes.filter(function(_child){
-      return _child !== thiss;
-    });
   };
 
   return TreeNode;
@@ -7296,13 +7282,13 @@ exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
 },{"./decode":43,"./encode":44}],46:[function(require,module,exports){
-/*! rasterizeHTML.js - v1.2.1 - 2015-11-26
+/*! rasterizeHTML.js - v1.2.0 - 2015-10-03
 * http://www.github.com/cburgmer/rasterizeHTML.js
 * Copyright (c) 2015 Christoph Burgmer; Licensed MIT */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module unless amdModuleId is set
-    define(["url","css-mediaquery","xmlserializer","sane-domparser-error","ayepromise","inlineresources"], function (a0,b1,c2,d3,e4,f5) {
+    define(["url","cssMediaQuery","xmlserializer","sanedomparsererror","ayepromise","inlineresources"], function (a0,b1,c2,d3,e4,f5) {
       return (root['rasterizeHTML'] = factory(a0,b1,c2,d3,e4,f5));
     });
   } else if (typeof exports === 'object') {
@@ -8279,26 +8265,11 @@ var document2svg = (function (util, browser, documentHelper, mediaQueryHelper, x
 
     var module = {};
 
-    var svgAttributes = function (size, zoom) {
-        var zoomFactor = zoom || 1;
-
-        var attributes = {
-            width: size.width,
-            height: size.height,
-            'font-size': size.rootFontSize
-        };
-
-        if (zoomFactor !== 1) {
-            attributes.style = 'transform:scale(' + zoomFactor + '); transform-origin: 0 0;';
-        }
-
-        return attributes;
-    };
-
-    var foreignObjectAttributes = function (size) {
+    var zoomedElementSizingAttributes = function (size, zoomFactor) {
         var closestScaledWith, closestScaledHeight,
             offsetX, offsetY;
 
+        zoomFactor = zoomFactor || 1;
         closestScaledWith = Math.round(size.viewportWidth);
         closestScaledHeight = Math.round(size.viewportHeight);
 
@@ -8311,6 +8282,10 @@ var document2svg = (function (util, browser, documentHelper, mediaQueryHelper, x
              'width': closestScaledWith,
              'height': closestScaledHeight
         };
+
+        if (zoomFactor !== 1) {
+            attributes.transform = 'scale(' + zoomFactor + ')';
+        }
 
         return attributes;
     };
@@ -8347,16 +8322,19 @@ var document2svg = (function (util, browser, documentHelper, mediaQueryHelper, x
 
         browser.validateXHTML(xhtml);
 
-        var foreignObjectAttrs = foreignObjectAttributes(size);
-        workAroundCollapsingMarginsAcrossSVGElementInWebKitLike(foreignObjectAttrs);
-        workAroundSafariSometimesNotShowingExternalResources(foreignObjectAttrs);
+        var attributes = zoomedElementSizingAttributes(size, zoomFactor);
+
+        workAroundCollapsingMarginsAcrossSVGElementInWebKitLike(attributes);
+        workAroundSafariSometimesNotShowingExternalResources(attributes);
 
         return (
             '<svg xmlns="http://www.w3.org/2000/svg"' +
-                serializeAttributes(svgAttributes(size, zoomFactor)) +
+                ' width="' + size.width + '"' +
+                ' height="' + size.height + '"' +
+                ' font-size="' + size.rootFontSize + '"' +
                 '>' +
                 workAroundChromeShowingScrollbarsUnderLinuxIfHtmlIsOverflowScroll() +
-                '<foreignObject' + serializeAttributes(foreignObjectAttrs) + '>' +
+                '<foreignObject' + serializeAttributes(attributes) + '>' +
                 xhtml +
                 '</foreignObject>' +
                 '</svg>'
@@ -9545,7 +9523,6 @@ module.exports = (function(window, $){
       class: 'trails-controls-container'
     }).appendTo(controlsBoxInnerWrapper);
 
-
     // Create thumbnail gallery container
     var thumbnailGalleryContainer = $("<div>", {
       id: '' + trail._trailId + '-thumbnail-gallery-container',
@@ -9564,7 +9541,65 @@ module.exports = (function(window, $){
       class: 'trails-thumbnail-gallery'
     }).appendTo(thumbnailGalleryOverflowContainer);
 
+    // Create comment box container
+    var commentBoxContainer = $("<div>", {
+      id: '' + trail._trailId + '-comment-box-container',
+      class: 'trails-comment-box-container'
+    }).appendTo(controlsBoxInnerWrapper);
+
+    // Create comment box
+    var commentBox = $("<div>", {
+      id: '' + trail._trailId + '-comment-box',
+      class: 'trails-comment-box'
+    }).appendTo(commentBoxContainer);
+
+    // Create comment box
+    var commentInput = $("<textarea>", {
+      type: 'text',
+      rows:1,
+      wrap: 'hard',
+      id: '' + trail._trailId + '-comment-input',
+      class: 'trails-comment-input',
+      placeholder: 'Add a comment to trail #'+trail._trailId.split("-")[0] + "..."
+    }).keyup(function(event){
+      if(event.keyCode === 13 && $(this).val().length > 0){
+        var comment = $(this).val().trim();
+        if(comment.length > 0){   trail.addComment(comment); }
+        $(this).val("");
+    }}).appendTo(commentBoxContainer);
+
+    
+
     return box;
+
+  };
+
+  controlBox.addCommentView = function(trail, commentData){
+
+    // Create comment wrapper
+    var commentWrapper = $("<div>", {
+      id: '' + commentData.id + '-comment-wrapper',
+      class: 'trails-comment-wrapper'
+    }).appendTo(trail._controlBox.find('.trails-comment-box'));
+
+    // Create comment
+    var commentView = $("<div>", {
+      id: '' + commentData.id + '-comment-view',
+      class: 'trails-comment-view'
+    }).text(commentData.comment).appendTo(commentWrapper);
+
+    // Create Delete option
+    var deleteBtn = $("<div>", {
+      id: '' + commentData.id + '-comment-delete',
+      'comment-id': '' + commentData.id,
+      class: 'trails-comment-delete'
+    }).text("delete").appendTo(commentWrapper);
+
+    deleteBtn.click(function(){
+      var commentId = $(this).attr('comment-id');
+      trail._comments = trail._comments.filter(function(comment){ return comment.id !== commentId; });
+      $("#"+commentId+"-comment-wrapper").remove();
+    });
 
   };
 
@@ -9577,6 +9612,200 @@ module.exports = (function(window, $){
 }(window, window.jQuery));
 
 },{}],51:[function(require,module,exports){
+
+var fileSaver = require('filesaver.js/FileSaver.min.js');
+
+module.exports = (function(document, $){
+
+  // Flag bad practises
+  'use strict';
+
+  // ------------------------------------
+  // Namespace and Basic Setup
+  // ------------------------------------
+
+  var galleryControl = {};
+
+  // ------------------------------------
+  // Method
+  // ------------------------------------
+
+  galleryControl.create = function(trail){
+
+    // Create Control Wrapper
+    var wrapper = $("<div>", {
+      id: '' + trail._trailId + '-control-wrapper-gallery',
+      class: 'trails-control-wrapper control-right',
+    });
+
+    // Create Control
+    var ctrl = $("<div>", {
+      id: '' + trail._trailId + '-control-gallery',
+      class: 'trails-control',
+      html: '<b>G</b>'
+    }).appendTo(wrapper);
+
+    // Create Overlay
+    var overlay = $("<div>", {
+      id: '' + trail._trailId + '-trails-overlay',
+      class: 'trails-overlay',
+    }).hide().appendTo(document.body);
+
+    // Create Table
+    var table = $("<table>", {
+      id: '' + trail._trailId + '-trails-overlay-table',
+      class: 'trails-overlay-table',
+      cellpadding: 0,
+      cellspacing: 0,
+    }).appendTo(overlay);
+
+    // Create thead and tbody
+    var thead = $('<thead>').appendTo(table);
+    var tbody = $('<tbody>').appendTo(table);
+
+    var i = 0, data = [];
+
+    function transform(attrName) {
+
+      // Clear Table
+      d3.select('#'+trail._trailId + '-trails-overlay-table').select("tbody").selectAll("tr").remove();
+
+      // Month Names
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+      // Headers
+      var th = d3.select('#'+trail._trailId + '-trails-overlay-table thead').selectAll("th")
+        .data(Object.keys(data[0]))
+        .enter()
+        .append("th")
+        .text(function(d){ return d; });
+
+      // Rows
+      var tr = d3.select('#'+trail._trailId + '-trails-overlay-table tbody').selectAll("tr")
+        .data(data)
+        .enter()
+        .append("tr")
+        .attr('id',function(d) { return 'row-'+d.id; });
+
+      // Cells
+      var td = tr.selectAll("td")
+        .data(function(d){ return d3.entries(d); })
+        .enter()
+        .append("td")
+        .attr('data-key', function(d){ return d.key; })
+        .attr('class', function(d){ return d.key; });
+
+      // Id
+      tr.select("td.id")
+        .append('span')
+        .text(function(d){
+          return d.id.split("-")[0]+"...";
+        });
+
+      // Date
+      var colCapturedAt = tr.select("td.capturedAt")
+        .append('span')
+        .text(function(d){
+          var date = new Date(+d.capturedAt);
+          return months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() + " - " + date.getHours() + ":" +  date.getMinutes() + ":" + date.getSeconds();
+        });
+
+      // Parent
+      var colParentId = tr.select("td.parentId")
+        .append('span')
+        .attr('class', 'trails-overlay-parentId')
+        .text(function(d){
+          if(d.parentId){
+            return d.parentId.split("-")[0]+"...";
+          } else {
+            return null;
+          }
+        }).on('click', function(d){
+          if(d.parentId){
+            var parentElement = d3.select('#row-'+d.parentId);
+            var offset = parentElement[0][0].getBoundingClientRect();
+            parentElement
+            .transition().duration(0)
+            .style("background-color", "#ffc107")
+            .transition().delay(100).duration(1000)
+            .style("background-color", "white");
+            window.scrollTo(offset.x, offset.y);
+          }
+        });
+
+      // Remove indicator for rootNode
+      colParentId.filter(function(d){
+        console.log(d);
+        return d.parentId === null;
+      }).remove();
+
+      // Add Image
+      var colThumbnails = tr.select("td.thumbnail")
+        .append('img')
+        .attr('src', function(d){
+          return d.thumbnail;
+        }).attr('height', 150);
+
+
+    }
+
+
+
+    // Close OverlaY
+    var closeOverlay= $("<span>", {
+      id: '' + trail._trailId + '-trails-overlay-close',
+      class: 'trails-overlay-close',
+      text: 'CLOSE'
+    }).click(function(){
+      if(overlay.is(':visible')) overlay.fadeToggle("fast");
+    }).appendTo(overlay);
+
+    // Add Listener
+    $(document).on('click', '#' + ctrl.attr('id'), function(){
+
+      // Clear Previous Data
+      data = [];
+
+      // Get Snapshots Data
+      if(!trail._dataTree.isEmpty()){
+        trail._dataTree.traverser().traverseDFS(function(node){
+          data.push({
+            id: node._data.snapshot._snapshotId,
+            capturedAt: node._data.snapshot._capturedAt,
+            thumbnail: node._data.snapshot._thumbnail,
+            parentId: node._parentNode ? node._parentNode._data.snapshot._snapshotId : null
+          });
+        });
+      }
+
+      // Show
+      overlay.fadeToggle("fast");
+
+      // Add Data
+      transform('capturedAt');
+
+    });
+
+
+    // If ESC is pressed; close overlay
+    $(document).on("keyup",'body', function(event){
+      if(event.keyCode == 27){
+        if(overlay.is(':visible')){
+          overlay.fadeToggle("fast");
+        }
+      }
+    });
+
+
+    return wrapper;
+
+  };
+
+  return galleryControl;
+
+}(window.document, window.jQuery));
+
+},{"filesaver.js/FileSaver.min.js":32}],52:[function(require,module,exports){
 
 module.exports = (function(document, $){
 
@@ -9621,7 +9850,7 @@ module.exports = (function(document, $){
 
 }(window.document, window.jQuery));
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 module.exports = (function($, document){
   return {
 
@@ -9633,7 +9862,8 @@ module.exports = (function($, document){
       gistControl: require('./gistControl'),
       saveControl: require('./saveControl'),
       loadControl: require('./loadControl'),
-      snapshotControl: require('./snapshotControl')
+      snapshotControl: require('./snapshotControl'),
+      galleryControl: require('./galleryControl')
     },
 
     all: function(){
@@ -9648,7 +9878,7 @@ module.exports = (function($, document){
   };
 }(window.jQuery, window.document));
 
-},{"./controlBox":50,"./gistControl":51,"./loadControl":53,"./saveControl":54,"./snapshotControl":55}],53:[function(require,module,exports){
+},{"./controlBox":50,"./galleryControl":51,"./gistControl":52,"./loadControl":54,"./saveControl":55,"./snapshotControl":56}],54:[function(require,module,exports){
 
 module.exports = (function(document, $){
 
@@ -9711,7 +9941,7 @@ module.exports = (function(document, $){
 
 }(window.document, window.jQuery));
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 
 var fileSaver = require('filesaver.js/FileSaver.min.js');
 
@@ -9749,7 +9979,7 @@ module.exports = (function(document, $){
     $(document).on('click', '#' + ctrl.attr('id'), function(){
 
       // Create a Blob of `trail.export()`
-      var blob = new Blob([JSON.stringify(trail.export(), null, 2)], {type: "text/json;charset=utf-8"});
+      var blob = new Blob([JSON.stringify(trail.export(), null, 2).trim()], {type: "text/json"});
 
       // Save
       fileSaver.saveAs(blob, "trail-"+trail._trailId+".json");
@@ -9764,7 +9994,7 @@ module.exports = (function(document, $){
 
 }(window.document, window.jQuery));
 
-},{"filesaver.js/FileSaver.min.js":32}],55:[function(require,module,exports){
+},{"filesaver.js/FileSaver.min.js":32}],56:[function(require,module,exports){
 
 module.exports = (function(document, $){
 
@@ -9793,7 +10023,7 @@ module.exports = (function(document, $){
     var ctrlPrev = $("<div>", {
       id: '' + trail._trailId + '-control-snapshot-prev',
       class: 'trails-control snapshot-prev',
-      text: ' Prev '
+      text: ' << Prev '
     }).appendTo(wrapper);
 
     // Create Control
@@ -9836,7 +10066,7 @@ module.exports = (function(document, $){
 
 }(window.document, window.jQuery));
 
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 module.exports = (function(){
   return function() {
     function s1() {
@@ -9849,7 +10079,7 @@ module.exports = (function(){
   };
 }());
 
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 
 module.exports = (function(){
   return {
@@ -9857,7 +10087,7 @@ module.exports = (function(){
   };
 }());
 
-},{"./guid":56}],58:[function(require,module,exports){
+},{"./guid":57}],59:[function(require,module,exports){
 
 var Trail = require('./trail');
 
@@ -9916,7 +10146,7 @@ module.exports = trails = (function(_window, _$) {
 
 }(window, window.jQuery));
 
-},{"./trail":60}],59:[function(require,module,exports){
+},{"./trail":61}],60:[function(require,module,exports){
 var helpers = require('./helpers');
 var rasterizeHTML = require('rasterizehtml');
 var clone = require('clone');
@@ -10081,7 +10311,7 @@ module.exports = (function(){
 
 }());
 
-},{"./helpers":57,"clone":5,"rasterizehtml":46}],60:[function(require,module,exports){
+},{"./helpers":58,"clone":5,"rasterizehtml":46}],61:[function(require,module,exports){
 var controls = require('./controls');
 var helpers = require('./helpers');
 var snapshot = require('./snapshot');
@@ -10147,11 +10377,13 @@ module.exports = (function() {
 
     this._callbacks = {
       'onTrailDataSetChanged': [],
-      'onSnapshotChanged': [],
+      'onSnapshotChanged': []
     };
 
     this._waiting = false;
     this._currentNodeStack = [];
+
+    this._comments = [];
 
   };
 
@@ -10398,11 +10630,6 @@ module.exports = (function() {
    */
   Trail.prototype.renderTo = function(selector) {
 
-    // If controls are already attached; remove them
-    if(controls.isAttached(this._controlBox)){
-      this._controlBox.remove();
-    }
-
     // Update `_renderTo`
     this._renderTo = selector;
 
@@ -10410,6 +10637,49 @@ module.exports = (function() {
     this._controlBox.appendTo(selector);
 
     return this;
+  };
+
+  /**
+   * Adds a comment
+   *
+   * @method addComment
+   * @kind member
+   * @param {string} comment - commend that has to be added.
+   * @return {string} id - unique id generated for comment.
+   */
+  Trail.prototype.addComment = function(comment) {
+
+    // Create Id for comment
+    var id = helpers.guid();
+
+    var commentData = {
+      id: id,
+      comment: comment,
+      addedAt: new Date().getTime()
+    };
+
+    // Add
+    this._comments.push(commentData);
+
+    // Add comment in controlbox
+    controls.controlBox.addCommentView(this, commentData);
+
+    // Return Id
+    return id;
+
+  };
+
+  /**
+   * Adds a comment
+   *
+   * @method removeComment
+   * @kind member
+   * @param {string} comment - id using which comment has to be removed
+   */
+  Trail.prototype.removeComment = function(id) {
+    this._comments = this._comments.filter(function(commentData){
+      return commentData.id != id;
+    });
   };
 
   /**
@@ -10442,6 +10712,7 @@ module.exports = (function() {
       trailId: thiss._trailId,
       initiatedAt: thiss._initiatedAt,
       lastExportedAt: thiss._lastExportedAt,
+      comments: thiss._comments,
       controls: {
         options: Object.keys(thiss._controls),
         renderTo: thiss._renderTo
@@ -10486,6 +10757,10 @@ module.exports = (function() {
     else if(data && (typeof data !== 'object' || !data.trailId))
       throw new Error("Invalid trail data", data);
 
+    // Remove Overlay
+    var overlay = $("#"+this._trailId+"-trails-overlay");
+    if(overlay) overlay.remove();
+
     // Override Properties
     this._trailId = data.trailId;
     this._initiatedAt = data.initiatedAt;
@@ -10495,8 +10770,10 @@ module.exports = (function() {
     // Reset Node Stack
     clearThumbnailGallery(this);
 
-    // Reset Data tree
-    this._dataTree = dataTree.create();
+    // Re-create control box
+    this._controlBox.remove();
+    this._controlBox = controls.controlBox.create(this);
+    this._controls = {};
 
     // Controls
     var ctrls = data.controls.options && Array.isArray(data.controls) ? data.controls.options : controls.all();
@@ -10504,6 +10781,18 @@ module.exports = (function() {
 
     // Re-render
     this.renderTo(data.controls.renderTo);
+
+    // Hold `this`
+    var thiss = this;
+
+    // Add comments
+    this._comments = data.comments;
+    this._comments.forEach(function(commentData){
+      controls.controlBox.addCommentView(thiss, commentData);
+    });
+
+    // Reset Data tree
+    this._dataTree = dataTree.create();
 
     // Import data in a tree.
     this._dataTree.import(data.snapshots, 'children', function(nodeData){
@@ -10517,12 +10806,12 @@ module.exports = (function() {
     // Update Current Node in trails
     this._currentNode =  this._dataTree._rootNode;
 
-    // Hold `this`
-    var thiss = this;
+    console.log("stack", this._currentNodeStack);
 
     // Load Images Recursively
     (function recur(node){
       addSnapshotToGallery(thiss, node._data.snapshot);
+      thiss._currentNodeStack.push(node);
       if(node._childNodes.length){
         var lastNode = node._childNodes[node._childNodes.length - 1];
         recur(lastNode);
@@ -10587,6 +10876,7 @@ module.exports = (function() {
   };
 
   var clearNodeStackFrom = function(trail, parentNode){
+    console.log("stacksss", trail._currentNodeStack);
     if(parentNode){
       var parentIdx = trail._currentNodeStack.indexOf(parentNode);
       if(parentIdx > -1) {
@@ -10645,4 +10935,4 @@ module.exports = (function() {
 
 }());
 
-},{"./controls":52,"./helpers":57,"./snapshot":59,"data-tree":28}]},{},[1]);
+},{"./controls":53,"./helpers":58,"./snapshot":60,"data-tree":28}]},{},[1]);
