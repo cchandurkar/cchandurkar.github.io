@@ -41,6 +41,10 @@ module.exports = (function(){
 
   }
 
+  // ------------------------------------
+  // Methods
+  // ------------------------------------
+
   /**
    * Searches a tree in DFS fashion. Requires a search criteria to be provided.
    *
@@ -97,14 +101,19 @@ module.exports = (function(){
     var foundNode = null;
 
     // Find nodes recursively
-    (function recur(node){
-      if(node.matchCriteria(criteria)){
-        foundNode = node;
-        return foundNode;
-      } else {
-        node._childNodes.some(recur);
+    (function expand(queue){
+      while(queue.length){
+        var current = queue.splice(0, 1)[0];
+        if(current.matchCriteria(criteria)){
+          foundNode = current;
+          return;
+        }
+        current._childNodes.forEach(function(_child){
+          queue.push(_child);
+        });
       }
-    }(this._tree._rootNode));
+    }([this._tree._rootNode]));
+
 
     return foundNode;
 
@@ -144,12 +153,20 @@ module.exports = (function(){
    * });
    */
   Traverser.prototype.traverseBFS = function(callback){
-    callback(this._tree._rootNode);
-    (function recur(node){
-      node._childNodes.forEach(callback);
-      node._childNodes.forEach(recur);
-    }(this._tree._rootNode));
+    (function expand(queue){
+      while(queue.length){
+        var current = queue.splice(0, 1)[0];
+        callback(current);
+        current._childNodes.forEach(function(_child){
+          queue.push(_child);
+        });
+      }
+    }([this._tree._rootNode]));
   };
+
+  // ------------------------------------
+  // Export
+  // ------------------------------------
 
   return Traverser;
 
@@ -201,7 +218,77 @@ module.exports = (function(){
      */
     this._data = data;
 
+    /**
+     * Depth of the node represents level in hierarchy
+     *
+     * @property _depth
+     * @type {number}
+     * @default -1
+     */
+    this._depth = -1;
+
   }
+
+  // ------------------------------------
+  // Getters and Setters
+  // ------------------------------------
+
+  /**
+   * Returns a parent node of current node
+   *
+   * @method parentNode
+   * @memberof TreeNode
+   * @instance
+   * @return {TreeNode} - parent of current node
+   */
+  TreeNode.prototype.parentNode = function(){
+    return this._parentNode;
+  };
+
+  /**
+   * Returns an array of child nodes
+   *
+   * @method childNodes
+   * @memberof TreeNode
+   * @instance
+   * @return {array} - array of child nodes
+   */
+  TreeNode.prototype.childNodes = function(){
+    return this._childNodes;
+  };
+
+  /**
+   * Sets or gets the data belonging to this node. Data is what user sets using `insert` and `insertTo` methods.
+   *
+   * @method data
+   * @memberof TreeNode
+   * @instance
+   * @param {object | array | string | number | null} _data - data which is to be stored
+   * @return {object | array | string | number | null} - data belonging to this node
+   */
+  TreeNode.prototype.data = function(_data){
+    if(arguments.length > 0){
+      this._data = data;
+    } else {
+      return this._data;
+    }
+  };
+
+  /**
+   * Depth of the node. Indicates the level at which node lies in a tree.
+   *
+   * @method depth
+   * @memberof TreeNode
+   * @instance
+   * @return {number} - depth of node
+   */
+  TreeNode.prototype.depth = function(){
+    return this._data;
+  };
+
+  // ------------------------------------
+  // Methods
+  // ------------------------------------
 
   /**
    * Indicates whether this node matches the specified criteria. It triggers a callback criteria function that returns something.
@@ -209,7 +296,6 @@ module.exports = (function(){
    * @method matchCriteria
    * @memberof TreeNode
    * @instance
-   * @memberof TreeNode
    * @param {function} callback - Callback function that specifies some criteria. It receives {@link TreeNode#_data} in parameter and expects different values in different scenarios.
    * `matchCriteria` is used by following functions and expects:
    * 1. {@link Tree#searchBFS} - {boolean} in return indicating whether given node satisfies criteria.
@@ -219,6 +305,25 @@ module.exports = (function(){
   TreeNode.prototype.matchCriteria = function(criteria){
     return criteria(this._data);
   };
+
+  /**
+   * get sibling nodes.
+   *
+   * @method siblings
+   * @memberof TreeNode
+   * @instance
+   * @return {array} - array of instances of {@link TreeNode}
+   */
+  TreeNode.prototype.siblings = function(){
+    var thiss = this;
+    return !this._parentNode ? [] : this._parentNode._childNodes.filter(function(_child){
+      return _child !== thiss;
+    });
+  };
+
+  // ------------------------------------
+  // Export
+  // ------------------------------------
 
   return TreeNode;
 
@@ -276,6 +381,50 @@ module.exports = (function(){
 
   }
 
+  // ------------------------------------
+  // Getters and Setters
+  // ------------------------------------
+
+  /**
+   * Returns a root node of the tree.
+   *
+   * @method rootNode
+   * @memberof Tree
+   * @instance
+   * @return {TreeNode} - root node of the tree.
+   */
+  Tree.prototype.rootNode = function(){
+    return this._rootNode;
+  };
+
+  /**
+   * Returns a current node in a tree
+   *
+   * @method currentNode
+   * @memberof Tree
+   * @instance
+   * @return {TreeNode} - current node of the tree.
+   */
+  Tree.prototype.currentNode = function(){
+    return this._currentNode;
+  };
+
+  /**
+   * Getter function that returns {@link Traverser}.
+   *
+   * @method traverser
+   * @memberof Tree
+   * @instance
+   * @return {@link Traverser} for the tree.
+   */
+  Tree.prototype.traverser = function(){
+    return this._traverser;
+  };
+
+  // ------------------------------------
+  // Methods
+  // ------------------------------------
+
   /**
    * Checks whether tree is empty.
    *
@@ -327,11 +476,13 @@ module.exports = (function(){
   Tree.prototype.insert = function(data){
     var node = new TreeNode(data);
     if(this._rootNode === null && this._currentNode === null){
+      node._depth = 1;
       this._rootNode = this._currentNode = node;
     } else {
       node._parentNode = this._currentNode;
       this._currentNode._childNodes.push(node);
       this._currentNode = node;
+      node.depth = node._parentNode._depth + 1;
     }
     return node;
   };
@@ -403,18 +554,6 @@ module.exports = (function(){
   };
 
   /**
-   * Getter function that returns {@link Traverser}.
-   *
-   * @method traverser
-   * @memberof Tree
-   * @instance
-   * @return {@link Traverser} for the tree.
-   */
-  Tree.prototype.traverser = function(){
-    return this._traverser;
-  };
-
-  /**
    * Inserts node to a particular node present in the tree. Particular node here is searched
    * in the tree based on the criteria provided.
    *
@@ -479,35 +618,10 @@ module.exports = (function(){
   Tree.prototype.insertToNode = function(node, data){
     var newNode = new TreeNode(data);
     newNode._parentNode = node;
+    newNode._depth = newNode._parentNode._depth + 1;
     node._childNodes.push(newNode);
     this._currentNode = newNode;
     return newNode;
-  };
-
-  /**
-   * Get all child nodes of {@link TreeNode} specified.
-   *
-   * @method getChildNodesOf
-   * @memberof Tree
-   * @instance
-   * @param {object} - {@link TreeNode} of which child nodes are to be accessed.
-   * @return {array} - array of {@link TreeNode}s.
-   */
-  Tree.prototype.getChildNodesOf = function(node){
-    return node._childNodes;
-  };
-
-  /**
-   * Get parent node of {@link TreeNode} specified.
-   *
-   * @method getParentNodeOf
-   * @memberof Tree
-   * @instance
-   * @param {object} - {@link TreeNode} of which parent node is to be accessed.
-   * @return {object} - {@link TreeNode}.
-   */
-  Tree.prototype.getParentNodeOf = function(node){
-    return node._parentNode;
   };
 
   /**
@@ -643,6 +757,9 @@ module.exports = (function(){
     // Empty all tree
     if(this._rootNode) this.trimBranchFrom(this._rootNode);
 
+    // Set Current Node to root node as null
+    this._currentNode = this._rootNode = null;
+
     // Hold `this`
     var thiss = this;
 
@@ -681,6 +798,10 @@ module.exports = (function(){
    * @callback criteria
    * @param data {object} - data of particular {@link TreeNode}
    */
+
+   // ------------------------------------
+   // Export
+   // ------------------------------------
 
   return Tree;
 
