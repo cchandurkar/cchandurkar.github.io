@@ -9,7 +9,7 @@
     /* Reset & Base Styles */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Source Sans 3', sans-serif;
+      font-family:  'Source Sans 3', sans-serif;
       background: #fff;
       color: #333;
       line-height: 1.6;
@@ -123,6 +123,20 @@
     @media (min-width: 768px) {
       header { padding: 3rem 1rem; }
     }
+    a.resume {
+      text-decoration: none;
+      background: #007acc;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1rem;
+      font-family: 'Spline Sans', 'Source Sans 3', sans-serif;
+    }
+    a.resume img {
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
@@ -135,7 +149,15 @@
     <p class="contact">
       Boston, MA &nbsp;|&nbsp;
       <a href="mailto:cchandurkar@gmail.com">cchandurkar@gmail.com</a> &nbsp;|&nbsp;
-      <a href="https://linkedin.com/in/cchandurkar" target="_blank">LinkedIn</a>
+      <a href="https://linkedin.com/in/cchandurkar" target="_blank">LinkedIn</a> &nbsp;|&nbsp;
+      <a href="https://github.com/cchandurkar" target="_blank">GitHub</a>
+    </p>
+    <br />
+    <p>
+      <a target="_blank" href="https://docs.google.com/document/d/12FSYK0vEHUhhobc_k5velVMyAf-jXpiwcNPLHDJmmWE/export?format=pdf" class="resume">
+        <img src="./assets/images/icons/download.png" width="20" style="vertical-align: middle;" />
+        Resume
+      </a>
     </p>
   </header>
   <div class="container">
