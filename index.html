@@ -73,20 +73,22 @@
       top: 0;
       bottom: 0;
       width: 2px;
-      background: #ccc;
+      background: #dedede;
     }
     .timeline-entry {
       position: relative;
+      display: flex;
       margin-bottom: 2rem;
     }
     .timeline-entry::before {
       content: '';
       position: absolute;
-      left: -30px;
-      width: 20px;
-      height: 20px;
+      left: -25px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: #007acc;
+      /* background: #007acc; */
+      background: #afafaf;
       border: 2px solid #fff;
     }
     .timeline-date {
@@ -97,10 +99,6 @@
       padding: 0;
       margin: 0;
     }
-    .timeline-content {
-      padding: 1rem;
-      border-radius: 4px;
-    }
     .timeline-header {
       display: flex;
     }
@@ -108,6 +106,12 @@
     .accent { 
       /* color: #007acc; */
       color: #4f4f4f;
+    }
+    .timeline-details {
+      padding: 0 1rem;
+    }
+    .timeline-icon img {
+      width: 50px;
     }
     footer {
       text-align: center;
@@ -138,8 +142,8 @@
     <section id="about">
       <h2>About Me</h2>
       <p>
-        I am an experienced Data Engineer with a track record of designing, building, and optimizing large-scale data platforms.
-        I am passionate about real-time streaming, distributed computing, and cloud-native architectures.
+        Data engineer with 8+ years of experience designing, leading, and optimizing large-scale data systems. 
+        Skilled in architecting cloud-native solutions, leading technical strategy, and driving significant operational efficiencies.
       </p>
     </section>
     <section id="skills">
@@ -156,91 +160,103 @@
       <h2>Experience</h2>
       <div class="timeline">
         <div class="timeline-entry">
-          <div class="timeline-date">Dec 2022 - Present</div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <span class="icon"><img src="./assets/images/icons/gopuff.jpeg" width="30"></span>
-              <h3 class="accent">GoPuff — Senior Data Engineer</h3>
+          <div class="timeline-icon">
+            <img src="./assets/images/icons/gopuff.jpeg">
+          </div>
+          <div class="timeline-details">
+            <div class="timeline-date">Dec 2022 - Present</div>
+            <h3 class="accent">GoPuff — Senior Data Engineer</h3>
+            <div class="timeline-content">
+              <ul>
+                <li>Led development of a contract-driven, self-serving data platform, saving 15+ hours/week in manual work.</li>
+                <li>Migrated legacy data ingestion pipelines to a modern platform, reducing latency by 95%.</li>
+                <li>Migrated enterprise Kafka &amp; Kafka Connect to self-hosted Kubernetes, cutting costs by $130k annually.</li>
+                <li>Developed internal APIs &amp; GitHub Actions to enhance platform interoperability.</li>
+                <li>Implemented data anomaly detection &amp; regression testing using Monte Carlo.</li>
+              </ul>
             </div>
-            <ul>
-              <li>Led development of a contract-driven, self-serving data platform, saving 15+ hours/week in manual work.</li>
-              <li>Migrated legacy data ingestion pipelines to a modern platform, reducing latency by 95%.</li>
-              <li>Migrated enterprise Kafka &amp; Kafka Connect to self-hosted Kubernetes, cutting costs by $130k annually.</li>
-              <li>Developed internal APIs &amp; GitHub Actions to enhance platform interoperability.</li>
-              <li>Implemented data anomaly detection &amp; regression testing using Monte Carlo.</li>
-            </ul>
           </div>
         </div>
         <div class="timeline-entry">
-          <div class="timeline-date">May 2021 - Nov 2022</div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <span class="icon"><img src="./assets/images/icons/stripe.jfif" width="30"></span>
+          <div class="timeline-icon">
+            <img src="./assets/images/icons/stripe.jfif">
+          </div>
+          <div class="timeline-details">
+            <div class="timeline-date">May 2021 - Nov 2022</div>
               <h3 class="accent">Stripe — Software Engineer</h3>
-            </div>
-            <ul>
-              <li>Designed data enrichment &amp; aggregation pipelines using Spark, Iceberg, S3, and Scala for a Financial Data Warehouse.</li>
-              <li>Led data preparation for Payment Volume report, ensuring dollar-value accuracy.</li>
-              <li>Automated CSV-based journal entry ingestion, saving 10+ engineering hours during month-close.</li>
-              <li>Partnered with TPMs to translate business definitions into scalable data models.</li>
-            </ul>
+              <div class="timeline-content">
+                <ul>
+                  <li>Designed data enrichment &amp; aggregation pipelines using Spark, Iceberg, S3, and Scala for a Financial Data Warehouse.</li>
+                  <li>Led data preparation for Payment Volume report, ensuring dollar-value accuracy.</li>
+                  <li>Automated CSV-based journal entry ingestion, saving 10+ engineering hours during month-close.</li>
+                  <li>Partnered with TPMs to translate business definitions into scalable data models.</li>
+                </ul>
+              </div>
           </div>
         </div>
         <div class="timeline-entry">
-          <div class="timeline-date">June 2020 - Apr 2021</div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <span class="icon"><img src="./assets/images/icons/mcgraw-hill.png" width="30"></span>
-              <h3 class="accent"> McGraw-Hill Education — Senior Software Engineer</h3>
+          <div class="timeline-icon">
+            <img src="./assets/images/icons/mcgraw-hill.png" width="80">
+          </div>
+          <div class="timeline-details">
+            <div class="timeline-date">June 2020 - Apr 2021</div>
+            <h3 class="accent"> McGraw-Hill Education — Senior Software Engineer</h3>
+            <div class="timeline-content">
+              <ul>
+                <li>Built data aggregation workflows to produce analytical reports used by millions of students &amp; teachers.</li>
+                <li>Re-modeled eventing data, improving data processing efficiency by ~60% and simplifying downstream ETL.</li>
+                <li>Collaborated with data scientists and product managers to design scalable, ML-ready datasets for personalized learning experiences.</li>
+              </ul>
             </div>
-            <ul>
-              <li>Built data aggregation workflows to produce analytical reports used by millions of students &amp; teachers.</li>
-              <li>Re-modeled eventing data, improving data processing efficiency by ~60% and simplifying downstream ETL.</li>
-              <li>Collaborated with data scientists and product managers to design scalable, ML-ready datasets for personalized learning experiences.</li>
-            </ul>
+          </div> 
+        </div>
+        <div class="timeline-entry">
+          <div class="timeline-icon">
+            <img src="./assets/images/icons/mcgraw-hill.png">
+          </div>
+          <div class="timeline-details">
+            <div class="timeline-date">Aug 2016 - June 2020</div>
+            <h3 class="accent"> McGraw-Hill Education — Software Engineer</h3>
+            <div class="timeline-content">
+              <ul>
+                <li>Led migration from Elasticsearch-based microservices to streaming data pipelines, reducing costs by 40%.</li>
+                <li>Optimized Spark pipelines &amp; PostgreSQL queries, improving data processing SLA by 40%.</li>
+                <li>Developed REST APIs in Node.js to ingest eventing data and expose processed analytics for reporting.</li>
+                <li>Integrated custom logging, alerting, and metrics tracking into data pipelines, improving system reliability.</li>
+              </ul>
+            </div>
+          </div> 
+        </div>
+        <div class="timeline-entry">
+          <div class="timeline-icon">
+            <img src="./assets/images/icons/umassd.jfif">
+          </div>
+          <div class="timeline-details">
+            <div class="timeline-date">Sept 2015 - May 2016</div>
+            <h3 class="accent">University of Massachusetts Dartmouth — Research Assistant</h3>
+            <div class="timeline-content">
+              <ul>
+                <li>Researched action-based vs change-based data provenance capturing techniques in web applications.</li>
+                <li>Implemented SIMProv.js framework to capture, replay, and securely share an action-based data provenance.</li>
+                <li>Integrated SIMProv.js framework with web applications and data visualizations for dogfooding.</li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="timeline-entry">
-          <div class="timeline-date">Aug 2016 - June 2020</div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <span class="icon"><img src="./assets/images/icons/mcgraw-hill.png" width="30"></span>
-              <h3 class="accent"> McGraw-Hill Education — Software Engineer</h3>
-            </div>
-            <ul>
-              <li>Led migration from Elasticsearch-based microservices to streaming data pipelines, reducing costs by 40%.</li>
-              <li>Optimized Spark pipelines &amp; PostgreSQL queries, improving data processing SLA by 40%.</li>
-              <li>Developed REST APIs in Node.js to ingest eventing data and expose processed analytics for reporting.</li>
-              <li>Integrated custom logging, alerting, and metrics tracking into data pipelines, improving system reliability.</li>
-            </ul>
+          <div class="timeline-icon">
+            <img src="./assets/images/icons/pfs.jpg">
           </div>
-        </div>
-        <div class="timeline-entry">
-          <div class="timeline-date">Sept 2015 - May 2016</div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <span class="icon"><img src="./assets/images/icons/umassd.jfif" width="30"></span>
-              <h3 class="accent">University of Massachusetts Dartmouth — Research Assistant</h3>
+          <div class="timeline-details">
+            <div class="timeline-date">May 2015 - Aug 2015</div>
+            <h3 class="accent">Preferred Freezer Services — Data Science Research Intern</h3>
+            <div class="timeline-content">
+              <ul>
+                <li>Global Aquaculture Alliance partnered with Preferred Freezer Services and UMass Dartmouth to build aquaculture facilities database. Goal was to provide a comprehensive picture of the aquaculture industry in four key areas: feed production, hatcheries, farming, and processing.
+                <li>Developed a web-based data visualization tool to analyze and compare aquaculture facilities data using Emberjs.</li>
+                <li>Automated customized email sending using PHPMailer.</li>
+              </ul>
             </div>
-            <ul>
-              <li>Researched action-based vs change-based data provenance capturing techniques in web applications.</li>
-              <li>Implemented SIMProv.js framework to capture, replay, and securely share an action-based data provenance.</li>
-              <li>Integrated SIMProv.js framework with web applications and data visualizations for dogfooding.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="timeline-entry">
-          <div class="timeline-date">May 2015 - Aug 2015</div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <span class="icon"><img src="./assets/images/icons/pfs.jpg" width="30"></span>
-              <h3 class="accent">Preferred Freezer Services — Data Science Research Intern</h3>
-            </div>
-            <ul>
-              <li>Global Aquaculture Alliance partnered with Preferred Freezer Services and UMass Dartmouth to build aquaculture facilities database. Goal was to provide a comprehensive picture of the aquaculture industry in four key areas: feed production, hatcheries, farming, and processing.
-              <li>Developed a web-based data visualization tool to analyze and compare aquaculture facilities data using Emberjs.</li>
-              <li>Automated customized email sending using PHPMailer.</li>
-            </ul>
           </div>
         </div>
       </div>
