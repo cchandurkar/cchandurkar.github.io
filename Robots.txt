@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://cchandurkar.github.io/sitemap.xml
